@@ -1,0 +1,175 @@
+/* =========================
+   GOOGLE FONT VARIABLES
+========================= */
+
+:root {
+  --primary-font: 'Lato', sans-serif;
+
+  --primary-color: #f37a65;
+  --secondary-color: #184a61;
+
+  --text-color: #222222;
+  --light-text: #666666;
+
+  --white: #ffffff;
+  --black: #000000;
+
+  --border-color: #e5e5e5;
+
+  --transition: all 0.3s ease;
+}
+
+/* =========================
+   RESET CSS
+========================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* =========================
+   GLOBAL TYPOGRAPHY
+========================= */
+
+body,
+p,
+span,
+label,
+input,
+textarea,
+button,
+a,
+li,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--primary-font);
+}
+
+body {
+  background-color: var(--white);
+  color: var(--text-color);
+
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+
+  overflow-x: hidden;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+
+/* =========================
+   PARAGRAPH
+========================= */
+
+p {
+  margin-bottom: 0;
+}
+
+/* =========================
+   LINKS
+========================= */
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: var(--transition);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+input,
+textarea,
+select {
+  outline: none;
+  border: 1px solid var(--border-color);
+}
+
+/* =========================
+   IMAGES
+========================= */
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* =========================
+   LISTS
+========================= */
+
+ul,
+ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.wellcome_screen_img img {
+    width: 300px;
+    margin: auto;
+}
+.wellcome_screen_content {
+    width: 500px;
+    margin: auto;
+    text-align: center;
+}
+
+.wellcome_screen_img {
+    text-align: center;
+}
+
+.wellcome_screen_content button {
+  width: 200px;
+  height: 48px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 4px;
+ 
+  font-size: 16px;
+  font-family: Lato, sans-serif;
+  cursor: pointer;
+  background: #f37a65;
+    color: #fff;
+    margin: auto;
+}
+
+
+.wellcome_screen_content p{
+ 
+    width: 100%;
+    color: rgb(24, 74, 97);
+    margin: 0px 0px 20px;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    cursor: pointer;
+  
+   
+}
