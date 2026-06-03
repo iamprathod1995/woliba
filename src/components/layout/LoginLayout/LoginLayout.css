@@ -1,5 +1,5 @@
 .woliba_body {
-    background-image: url(https://ddf0gygzuiev4.cloudfront.net/plg/plg_registration.png);
+    background-image: url("../../../../public/assets/images/plg_registration.png");
     background-size: cover;
     display: flex;
     flex-direction: column;

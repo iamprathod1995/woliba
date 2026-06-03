@@ -9,93 +9,30 @@ const WellnessInterest = ({ formData, setFormData, nextStep, prevStep }) => {
     const [wellnessData, setWellnessData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const selected = formData.wellnessInterest || [];
+    const selected = formData.areas_of_interest || [];
+console.log('wellnessData',wellnessData);
 
     useEffect(() => {
         fetchWellnessInterest();
     }, []);
 
-    const fetchWellnessInterest = async () => {
-        setLoading(true);
-
-        setWellnessData([
-          {
-                "id": 1,
-                "name": "Acrobatics",
-                "interest_type": "Individual Sports",
-                "interest_image": "aoi_icons\/acrobatics.png",
-                "background_image": "log-workout-svg\/acrobatics.svg",
-                "show_distance": 0,
-                "interest_icon": "interest_icons\/acrobatics.png",
-                "background_color": "#DA92C8",
-                "interest_color_icon": "interest_icons\/acrobatics_color_teal.png",
-                "interest_white_icon": "interest_icons\/acrobatics_color_white.png",
-                "created_at": "2018-10-03 03:56:40",
-                "updated_at": "2021-12-29 10:06:51"
-            },
-            {
-                "id": 2,
-                "name": "Aerial Arts",
-                "interest_type": "Individual Sports",
-                "interest_image": "aoi_icons\/aerial_arts.png",
-                "background_image": "log-workout-svg\/aerial_arts.svg",
-                "show_distance": 0,
-                "interest_icon": "interest_icons\/aerial_arts.png",
-                "background_color": "#DA9B6C",
-                "interest_color_icon": "interest_icons\/aerial_arts_color_teal.png",
-                "interest_white_icon": "interest_icons\/aerial_arts_color_white.png",
-                "created_at": "2018-10-03 03:56:40",
-                "updated_at": "2021-12-29 10:06:51"
-            },
-            {
-                "id": 3,
-                "name": "Aerobics",
-                "interest_type": "Individual Sports",
-                "interest_image": "aoi_icons\/aerobics.png",
-                "background_image": "log-workout-svg\/aerobics.svg",
-                "show_distance": 0,
-                "interest_icon": "interest_icons\/aerobics.png",
-                "background_color": "#BE7D9C",
-                "interest_color_icon": "interest_icons\/aerobics_color_teal.png",
-                "interest_white_icon": "interest_icons\/aerobics_color_white.png",
-                "created_at": "2018-10-03 03:56:40",
-                "updated_at": "2021-12-29 10:06:51"
-            },
-            {
-                "id": 4,
-                "name": "Archery",
-                "interest_type": "Other",
-                "interest_image": "aoi_icons\/archery.png",
-                "background_image": "log-workout-svg\/archery.svg",
-                "show_distance": 0,
-                "interest_icon": "interest_icons\/archery.png",
-                "background_color": "#75B084",
-                "interest_color_icon": "interest_icons\/archery_color_teal.png",
-                "interest_white_icon": "interest_icons\/archery_color_white.png",
-                "created_at": "2018-10-03 03:56:40",
-                "updated_at": "2021-12-29 10:06:51"
+     const fetchWellnessInterest = async () => {
+            try {
+                setLoading(true);
+                const res = await getWellnessInterest();
+                if (res?.data?.status) {
+                    setWellnessData(res?.data?.data[0] || []);
+                     setLoading(true);
+                } else {
+                    setWellnessData([]);
+                }
+            } catch (error) {
+                console.error("Error fetching wellness interest:", error);
+                setWellnessData([]);
+            } finally {
+                setLoading(false);
             }
-        ]);
-
-        setLoading(false);
-
-        // const fetchWellnessInterest = async () => {
-        //     try {
-        //         setLoading(true);
-        //         const res = await getWellnessInterest();
-        //         if (res?.data?.status) {
-        //             setWellnessData(res?.data?.data || []);
-        //         } else {
-        //             setWellnessData([]);
-        //         }
-        //     } catch (error) {
-        //         console.error("Error fetching wellness interest:", error);
-        //         setWellnessData([]);
-        //     } finally {
-        //         setLoading(false);
-        //     }
-        // };
-    };
+        };
 
     const groupedData = wellnessData.reduce((acc, item) => {
         const key = item.interest_type || "Others";
@@ -111,7 +48,7 @@ const WellnessInterest = ({ formData, setFormData, nextStep, prevStep }) => {
 
         setFormData({
             ...formData,
-            wellnessInterest: updated,
+            areas_of_interest: updated,
         });
     };
 

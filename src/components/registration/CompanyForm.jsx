@@ -9,6 +9,7 @@ import { setCompany } from "../../redux/slices/registrationSlice";
 
 const CompanyForm = () => {
     const [company_name, setCompanyName] = useState("");
+    const [loading, setLoading] = useState(false);
     const [password, setPassword] = useState("");
     const [crash, setCrash] = useState(false);
     const [errors, setErrors] = useState({});
@@ -77,42 +78,48 @@ const CompanyForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
-        // try {
-        //     const response = await verifyCompany({
-        //         company_name,
-        //         password,
-        //     });
+        setLoading(true);
+        try {
+            const response = await verifyCompany({
+                company_name,
+                password,
+            });
 
-        //     if (response?.data?.status === "success") {
-        //         toast.success("Company Verified Successfully");
-        //         dispatch(setCompany(response.data.data[0]));
-        //         navigate("/register");
-        //     }
-        // } catch (error) {
-        //     console.error("verifyCompany error:", error);
-        //     toast.error("Invalid Company Credentials");
-        //     const status = error?.response?.status;
-        //     if (status >= 500) {
-        //         setCrash(true); // optional
-        //     }
-        // }
-        toast.success("Company Verified Successfully");
+            if (response?.data?.status === "success") {
+                toast.success("Company Verified Successfully");
+                dispatch(setCompany(response.data.data[0]));
+                navigate("/register");
+            }
+        } catch (error) {
+            console.error("verifyCompany error:", error);
+            toast.error("Invalid Company Credentials");
+            const status = error?.response?.status;
+            if (status >= 500) {
+                setCrash(true); // optional
+            }
+        } finally {
+            setLoading(false);
+        }
+        // toast.success("Company Verified Successfully");
 
-        dispatch(
-            setCompany({
-                id: 1,
-                company_name: "Woliba",
-                password: "Woliba@123!",
-                spouse_or_dependent: 1,
-                show_spouse: 0,
-                show_dependent: 0,
-            })
-        );
-        navigate("/register");
+        // dispatch(
+        //     setCompany({
+        //         id: 1,
+        //         company_name: "Woliba",
+        //         password: "Woliba@123!",
+        //         spouse_or_dependent: 1,
+        //         show_spouse: 0,
+        //         show_dependent: 0,
+        //     })
+        // );
+        // navigate("/register");
     };
 
     const isDisabled =
-        !company_name || !password || passwordErrors.length > 0;
+    !company_name ||
+    !password ||
+    passwordErrors.length > 0 ||
+    loading;
 
     return (
         <div className="woliba_form">
@@ -168,7 +175,7 @@ const CompanyForm = () => {
                 <div className="otp_button_box">
                     <Button
                         type="submit"
-                        title="Next"
+                       title={loading ? "Verifying..." : "Next"}
                         disabled={isDisabled}
                     />
                 </div>

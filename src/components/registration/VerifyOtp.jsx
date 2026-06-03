@@ -12,7 +12,7 @@ import Button from "../common/Button";
 import { LeftArrow } from "../../utils/image-constannts";
 import { toast } from "react-toastify";
 
-const OTP_TIME = 10;
+const OTP_TIME = 180;
 
 const VerifyOtp = () => {
     const [otp, setOtp] = useState("");
@@ -70,30 +70,30 @@ const VerifyOtp = () => {
     // -----------------------------
     const handleVerify = useCallback(async () => {
         if (!canSubmit) return;
-        dispatch(setOtpVerified(true));
-        navigate("/register");
+        // dispatch(setOtpVerified(true));
+        // navigate("/register");
 
-        // try {
-        //     setLoading(true);
+        try {
+            setLoading(true);
 
-        //     const response = await verifyOtpApi({ otp, token });
-        //     const res = response?.data;
-        //     if (res?.status === "success") {
-        //         dispatch(setOtpVerified(true));
-        //         toast.success(res?.data?.message || "OTP Verified Successfully");
-        //         navigate("/register");
-        //     } else {
-        //         toast.error(res?.message || "Invalid OTP");
-        //     }
-        // } catch (error) {
-        //     console.error("OTP Verify Error:", error);
+            const response = await verifyOtpApi({ otp, token });
+            const res = response?.data;
+            if (res?.status === "success") {
+                dispatch(setOtpVerified(true));
+                toast.success(res?.data?.message || "OTP Verified Successfully");
+                navigate("/register");
+            } else {
+                toast.error(res?.message || "Invalid OTP");
+            }
+        } catch (error) {
+            console.error("OTP Verify Error:", error);
 
-        //     toast.error(
-        //         error?.response?.data?.message || "Invalid OTP"
-        //     );
-        // } finally {
-        //     setLoading(false);
-        // }
+            toast.error(
+                error?.response?.data?.message || "Invalid OTP"
+            );
+        } finally {
+            setLoading(false);
+        }
     }, [canSubmit, otp, token, dispatch, navigate]);
 
     // -----------------------------

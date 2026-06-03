@@ -24,7 +24,7 @@ The application communicates with Woliba APIs for authentication and user regist
 ## Clone the Project
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/iamprathod1995/woliba.git
 ```
 
 ---

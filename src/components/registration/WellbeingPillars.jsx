@@ -5,20 +5,21 @@ import Button from "../common/Button";
 import { LeftArrow, LOADER } from "../../utils/image-constannts";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { getWellbeingPillars } from "../../api/wellbeingApi";
+import { completeRegistrationApi } from "../../api/userApi";
 
 const MAX_SELECTION = 3;
 
-const WellbeingPillars = ({ prevStep }) => {
+const WellbeingPillars = ({ formData, setFormData, prevStep, }) => {
   const user = useSelector((state) => state.registration.user);
+  console.log('formData', formData);
 
   const navigate = useNavigate();
 
   // =========================
   // FORM DATA STATE
   // =========================
-  const [formData, setFormData] = useState({
-    wellbeingPillars: [],
-  });
+
 
   // =========================
   // LOCAL STATES
@@ -27,49 +28,33 @@ const WellbeingPillars = ({ prevStep }) => {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const selected = formData?.wellbeingPillars || [];
+  const selected = formData?.wellbeing_pillars || [];
 
   // =========================
   // FETCH PILLARS
   // =========================
   useEffect(() => {
     const fetchPillars = async () => {
-      
-     setPillars([
-                {
-                    id: 1,
-                    pillar_title: "Physical Wellbeing",
-                    description: "Energy, movement, sleep, and routine care",
-                },
-                {
-                    id: 2,
-                    pillar_title: "Mental Wellbeing",
-                    description: "Clarity, focus, and mindfulness",
-                },
-                {
-                    id: 3,
-                    pillar_title: "Emotional Wellbeing",
-                    description: "Resilience, self-awareness, stress regulation",
-                }
-            ]);
-            //   try {
-          
 
-            //     const res = await getWellbeingPillars();
-            //     const response = res?.data;
 
-            //     if (response?.status) {
-            //       setPillars(response?.data || []);
-            //     } else {
-            //       console.warn("API returned false status");
-            //       setPillars([]);
-            //     }
-            //   } catch (error) {
-            //     console.error("Error fetching pillars:", error);
-            //     setPillars([]);
-            //   } finally {
-            //     setLoading(false);
-            //   }
+      try {
+
+
+        const res = await getWellbeingPillars();
+        const response = res?.data;
+
+        if (response?.status) {
+          setPillars(response?.data || []);
+        } else {
+          console.warn("API returned false status");
+          setPillars([]);
+        }
+      } catch (error) {
+        console.error("Error fetching pillars:", error);
+        setPillars([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchPillars();
@@ -78,28 +63,49 @@ const WellbeingPillars = ({ prevStep }) => {
   // =========================
   // TOGGLE PILLAR
   // =========================
+  // const togglePillar = (id) => {
+  //   setFormData((prev) => {
+  //     const current = prev?.wellbeingPillars || [];
+
+  //     const isSelected = current.includes(id);
+
+  //     let updated = [];
+
+  //     if (isSelected) {
+  //       updated = current.filter((item) => item !== id);
+  //     } else {
+  //       if (current.length >= MAX_SELECTION) {
+  //         return prev;
+  //       }
+
+  //       updated = [...current, id];
+  //     }
+
+  //     return {
+  //       ...prev,
+  //       wellbeingPillars: updated,
+  //     };
+  //   });
+  // };
+
   const togglePillar = (id) => {
-    setFormData((prev) => {
-      const current = prev?.wellbeingPillars || [];
+    const current = formData?.wellbeing_pillars || [];
 
-      const isSelected = current.includes(id);
+    const isSelected = current.includes(id);
 
-      let updated = [];
+    let updated = [];
 
-      if (isSelected) {
-        updated = current.filter((item) => item !== id);
-      } else {
-        if (current.length >= MAX_SELECTION) {
-          return prev;
-        }
+    if (isSelected) {
+      updated = current.filter((item) => item !== id);
+    } else {
+      if (current.length >= MAX_SELECTION) return;
 
-        updated = [...current, id];
-      }
+      updated = [...current, id];
+    }
 
-      return {
-        ...prev,
-        wellbeingPillars: updated,
-      };
+    setFormData({
+      ...formData,
+      wellbeing_pillars: updated,
     });
   };
 
@@ -110,38 +116,31 @@ const WellbeingPillars = ({ prevStep }) => {
     try {
       setSubmitting(true);
 
-      const payload = {
-        userId: user?.id,
-        wellbeingPillars: selected,
-      };
-
-      console.log("SUBMIT PAYLOAD =>", payload);
-
-      // API CALL
-      /*
-      const res = await completeRegistrationApi(payload);
+      const res = await completeRegistrationApi(formData);
       const response = res?.data;
 
-      if (!response?.status) {
+      if (response?.status !== "success") {
         toast.error(response?.message || "Registration failed");
         return;
       }
-      */
 
-      setTimeout(() => {
-        toast.success("Registration Success");
+      const userData = response?.data;
 
-        localStorage.setItem("welcome", "yes");
+      // Save user details
+      localStorage.setItem(
+        "user",
+        JSON.stringify(userData)
+      );
 
-        navigate("/welcome");
+      toast.success("Registration completed successfully");
 
-        setSubmitting(false);
-      }, 1000);
+     
+      navigate("/welcome");
+
     } catch (error) {
       console.error("Submit error:", error);
-
       toast.error("Failed to submit data");
-
+    } finally {
       setSubmitting(false);
     }
   };

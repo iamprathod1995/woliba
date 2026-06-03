@@ -85,6 +85,7 @@ const Credentials = ({ formData, setFormData, nextStep }) => {
             ...formData,
             fname: user.fname,
             lname: user.lname,
+            email:user.mail,
             password,
             token,
             birthday,

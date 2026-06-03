@@ -19,7 +19,7 @@ const UserDetailsForm = () => {
     const company = useSelector(
         (state) => state.registration.company
     );
-
+    const [loading, setLoading] = useState(false);
     const [payload, setPayload] = useState({
         mail: "",
         fname: "",
@@ -151,29 +151,39 @@ const UserDetailsForm = () => {
                 toast.error("Company not found");
                 return;
             }
-            dispatch(setToken("RHhYcWxKL0dRM29TUk9VcG1Ic3NEdWU5SGxzPQ=="));
-            dispatch(setUser(payload));
-            toast.success("OTP Sent Successfully");
 
-            // try {
-            //     const requestPayload = {
-            //         company_id: company.id,
-            //         ...payload,
-            //     };
-            //     const response = await saveUserAndSendOtp(requestPayload);
-            //     dispatch(setToken(response?.data?.data?.token));
-            //     dispatch(setUser(payload));
-            //     toast.success("OTP Sent Successfully");
-            //     navigate("/verify-otp");
-            // } catch (error) {
-            //     console.error("OTP Error:", error);
-            //     toast.error(
-            //         error?.response?.data?.message ||
-            //         "Something went wrong"
-            //     );
-            // }
+
+            try {
+                setLoading(true);
+                const requestPayload = {
+                    company_id: company.id,
+                    ...payload,
+                };
+                const response = await saveUserAndSendOtp(requestPayload);
+                const result = response?.data;
+
+                if (result?.status === "success") {
+                    dispatch(setToken(result?.data?.token));
+                    dispatch(setUser(payload));
+                    toast.success("OTP Sent Successfully");
+                } else {
+                    toast.error(
+                        result?.data?.message || "Something went wrong"
+                    );
+                }
+            } catch (error) {
+                console.error("OTP Error:", error);
+                const message =
+                    error?.response?.data?.data?.message ||
+                    error?.response?.data?.message ||
+                    "Something went wrong";
+
+                toast.error(message);
+            } finally {
+                setLoading(false);
+            }
         },
-        [payload, company, dispatch, navigate, isFormValid, validateField,]
+        [payload, company, dispatch, navigate, isFormValid, validateField,loading]
     );
 
     return (
@@ -229,9 +239,10 @@ const UserDetailsForm = () => {
 
                 <div className="otp_button_box">
                     <Button
-                        title="Verify Email"
+                        title={loading ? "Sending OTP..." : "Verify Email"}
                         type="submit"
-                        disabled={!isFormValid}
+                           disabled={!isFormValid || loading}
+
                     />
                 </div>
             </form>
